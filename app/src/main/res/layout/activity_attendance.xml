@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/CustomToolbarTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+
+    <RelativeLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:visibility="visible"
+        tools:context=".Attendance">
+
+        <Button
+            android:id="@+id/attendButton"
+            android:layout_width="200dp"
+            android:layout_marginTop="75dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/check_in" />
+
+
+        <LinearLayout
+            android:id="@+id/breaks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkOutButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/breakin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Break Start"
+                android:layout_marginRight="10dp" /> <!-- Ajoutez une marge à droite -->
+
+            <Button
+                android:id="@+id/breakout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Break End" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/breaks"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/lunchin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lunch Start"
+                android:layout_marginRight="10dp" /> <!-- Ajoutez une marge à droite -->
+
+            <Button
+                android:id="@+id/lunchout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lunch End" />
+
+        </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/checkOutButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/attendButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="@string/check_out" />
+
+
+        <EditText
+            android:id="@+id/feedback"
+            android:layout_width="271dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/checkOutButton"
+            android:layout_marginTop="189dp"
+            android:hint="Feedback"
+            android:inputType="textMultiLine"
+            android:maxLength="200" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="223dp"
+            android:layout_height="269dp"
+            android:layout_below="@id/feedback"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="16dp" />
+
+    </RelativeLayout>
+    </ScrollView>
+</FrameLayout>

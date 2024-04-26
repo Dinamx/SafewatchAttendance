@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Safewatch Attendance</string>
+    <string name="check_out">Off Duty</string>
+    <string name="check_in">On Duty</string>
+
+<!--    <string name="break_start">Break Start</string>-->
+<!--    <string name="break_end">Break End</string>-->
+<!--    <string name="lunch_start">Lunch Start</string>-->
+<!--    <string name="lunch_end">Lunch End</string>-->
+
+</resources>
