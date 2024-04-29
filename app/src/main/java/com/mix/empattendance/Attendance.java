@@ -463,7 +463,14 @@ public class Attendance extends AppCompatActivity {
                                     presence.print();
                                     sendPresence(presence);
                                 } else {
-                                    Toast.makeText(Attendance.this, "Localisation indisponible, GPS et réseau non-activés", Toast.LENGTH_SHORT).show();
+                                    // Ajout d'autres conditions else pour gérer différents cas
+                                    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                                        Toast.makeText(Attendance.this, "GPS non-activé. Veuillez l'activer pour une localisation précise.", Toast.LENGTH_SHORT).show();
+                                    } else if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                                        Toast.makeText(Attendance.this, "Le réseau non-activé. La localisation basée sur le réseau n'est pas disponible.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(Attendance.this, "Localisation indisponible, GPS et réseau non-activés", Toast.LENGTH_SHORT).show();
+                                    }
                                     System.out.println("La localisation n'est pas disponible");
                                 }
                             }
