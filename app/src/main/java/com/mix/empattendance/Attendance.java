@@ -358,7 +358,7 @@ public class Attendance extends AppCompatActivity {
                         if (location != null) {
                             double latitude = location.getLatitude();
                             double longitude = location.getLongitude();
-                            System.out.println("Latitude: " + latitude + ", Longitude: " + longitude);
+                            System.out.println("Latitude: eb " + latitude + ", Longitude: " + longitude);
 
                             presence.setLatitude(latitude);
                             presence.setLongitude(longitude);
