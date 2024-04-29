@@ -326,63 +326,89 @@ public class Attendance extends AppCompatActivity {
     }
 
 
+
+    private void defineLocation2(){
+//        Check si la location par gps est disponible , si oui , retourne la location par gps
+//        Sinon retourne la location par NETWORK
+//        Sionn utilise fusedLocationClient
+//        Sinon Affiche Localisation Indisponibl
+//        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            System.out.println("NETWORK PROVIDER");
+//            Toast.makeText(Attendance.this, "GPS non disponible. Utilisation de la localisation réseau", Toast.LENGTH_SHORT).show();
+//            // Utilisez le fournisseur de localisation réseau comme solution de repli
+//            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//            System.out.println("Printing localisation");
+//        }
+//        if (location == null){
+//            System.out.println("GPS PROVIDER");
+//            // Utilisez le fournisseur GPS comme d'habitude
+//            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        }
+//        Modifie ce code, mais en gros c'est l'idée , et si ca marcjhe toujours pas , il faut un prendre grace a fusedLocationClient ,
+//        Mais ca doit retourner un Location peu importe
+    }
+
+    private Location defineLocation() {
+        Location location = null;
+        try {
+            // Vérifie si la localisation par GPS est disponible
+            if (fusedLocationClient.getLastLocation() != null) {
+                location = fusedLocationClient.getLastLocation().getResult();
+            }
+            // Si la localisation par GPS n'est pas disponible, utilise la localisation par réseau
+            if (location == null) {
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+            }
+            if (location == null){
+            System.out.println("GPS PROVIDER");
+            // Utilisez le fournisseur GPS comme d'habitude
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        if (location == null) {
+            Toast.makeText(this, "Localisation Indisponible", Toast.LENGTH_SHORT).show();
+        }
+        return location;
+    }
+
+
+
+
+
+
+
+
+
     private void definePresence(String typeAttendance) {
-        // Vérifiez si la permission de localisation est accordée
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Demandez la permission de localisation
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION_PERMISSION);
-            Toast.makeText(Attendance.this, "Localisation needed", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Vérifiez si le GPS est activé
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(Attendance.this, "GPS non activé. Veuillez l'activer pour une localisation précise.", Toast.LENGTH_SHORT).show();
-            checkGpsStatus();
-            return;
-        }
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-//                REQUEST_LOCATION_PERMISSION);
-//        checkGpsStatus();
-
         Presence presence = new Presence();
         presence.setImage(this.encodedImage);
         presence.setIdemploye(this.idEmploye);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-                            System.out.println("Latitude: eb " + latitude + ", Longitude: " + longitude);
+        Location location = defineLocation();
 
-                            presence.setLatitude(latitude);
-                            presence.setLongitude(longitude);
-                            Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                            presence.setDateheure(currentTimestamp);
+        presence.setLongitude(location.getLongitude());
+        presence.setLatitude(location.getLatitude());
 
-                            presence.setType_attendance(typeAttendance);
-                            presence.setFeedback(getFeedback());
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        System.out.println("Latitude: eb " + latitude + ", Longitude: " + longitude);
 
-                            presence.print();
-                            sendPresence(presence);
-                        } else {
-                            Toast.makeText(Attendance.this, "Localisation indisponible , GPS non-activé", Toast.LENGTH_SHORT).show();
-                            System.out.println("La localisation n'est pas disponible");
-                        }
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Attendance.this, "Erreur de localisation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        presence.setLatitude(latitude);
+        presence.setLongitude(longitude);
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        presence.setDateheure(currentTimestamp);
+
+        presence.setType_attendance(typeAttendance);
+        presence.setFeedback(getFeedback());
+
+        presence.print();
+        sendPresence(presence);
+
     }
 
 
@@ -460,7 +486,8 @@ public class Attendance extends AppCompatActivity {
 
 
 
-    private void sendPresence(Presence presence) {
+    private void sendPresence(Presence presence)
+    {
         showProgress();
         new Thread(new Runnable() {
             @Override
@@ -554,14 +581,6 @@ public class Attendance extends AppCompatActivity {
             }
         }).start();
     }
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -723,32 +742,6 @@ public class Attendance extends AppCompatActivity {
         imageView.setImageBitmap(null);
     }
 
-
-    public Location getLocationOfThis() {
-        Location lastKnownLocation = null;
-        try {
-            Task<Location> locationTask = fusedLocationClient.getLastLocation();
-            locationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        lastKnownLocation = location;
-                    } else {
-                        Toast.makeText(Attendance.this, "Localisation indisponible", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            locationTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(Attendance.this, "Erreur de localisation: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-        return lastKnownLocation;
-    }
 
 
 
