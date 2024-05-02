@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.graphics.Color;
@@ -66,6 +68,34 @@ public class MainActivity extends AppCompatActivity {
     private Button loginButton;
     private ProgressBar progressBar;
     private LinearLayout contentLayout;
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflige le menu_information.xml dans le menu
+        getMenuInflater().inflate(R.menu.menu_information, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Gère le clic sur l'élément de menu
+        int id = item.getItemId();
+
+        if (id == R.id.action_information) {
+            // Ouvre PhoneInfoActivity lorsque l'utilisateur clique sur l'icône d'information
+            Intent intent = new Intent(this, PhoneInfoActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
     private void checkGpsStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -86,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+//        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             // Demandez la permission de la caméra
